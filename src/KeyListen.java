@@ -1,4 +1,6 @@
 import java.awt.event.*;
+import java.awt.geom.Path2D.*;
+import java.awt.geom.Path2D;
 
 public class KeyListen implements KeyListener {
 
@@ -23,16 +25,16 @@ public class KeyListen implements KeyListener {
 
     public void tick() {
         if (upPressed || wPressed) {
-            game.setPlayerY(game.getPlayerY() - XWing.DELTA);
+            game.getPlayer().setPosY(game.getPlayer().getPosY() - game.getPlayer().DELTA); // XXX
         }
         if (downPressed || sPressed) {
-            game.setPlayerY(game.getPlayerY() + XWing.DELTA);
+            game.getPlayer().setPosY(game.getPlayer().getPosY() + game.getPlayer().DELTA);
         }
         if (leftPressed || aPressed) {
-            game.setPlayerX(game.getPlayerX() - XWing.DELTA);
+            game.getPlayer().setPosX(game.getPlayer().getPosX() - game.getPlayer().DELTA);
         }
         if (rightPressed || dPressed) {
-            game.setPlayerX(game.getPlayerX() + XWing.DELTA);
+            game.getPlayer().setPosX(game.getPlayer().getPosX() + game.getPlayer().DELTA);
         }
     }
 
@@ -40,9 +42,13 @@ public class KeyListen implements KeyListener {
     public void keyPressed(KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            synchronized (game.getLasers()) {
-                game.getLasers()
-                        .add(new Laser(game.getPlayerX(), game.getPlayerY() + (XWing.DIAMETER / 2 - Laser.HEIGHT / 2)));
+            synchronized (game.getPlayer().getLasers()) {
+                game.getPlayer().getLasers().add(new Laser(game.getPlayer().getPosX(),
+                        game.getPlayer().getPosY() + (XWing.DIAMETER / 2 - Laser.HEIGHT / 2)));
+            }
+            synchronized (game.getEnemyShips()) {
+                game.getEnemyShips().add(
+                        new EnemyShip(XWing.SCREEN_WIDTH, XWing.SCREEN_HEIGHT / 2, 30, 30, 50, 1, new Path2D.Double()));
             }
         }
 

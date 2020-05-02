@@ -4,33 +4,33 @@ import javax.swing.*;
 import javax.swing.JFrame;
 
 public class XWing {
-    final static int SCREEN_WIDTH = 1800;
+    final static int SCREEN_WIDTH = 1600;
     final static int SCREEN_HEIGHT = 800;
 
     final static int DIAMETER = 25;
-    final static int DELTA = 2;
-    final static int TIMING = 5;
+    // final static int DELTA = 2; // change in pixels per tick (speed)
+    final static int TIMING = 10; // delay between repaints in ms
+    final static int BORDER = 40; // space for info display
 
     JFrame frame;
     GamePanel panel;
+    KeyListen k;
 
-    ArrayList<Laser> lasers;
+    Player player;
     ArrayList<Laser> removalList;
-
-    int playerX;
-    int playerY;
+    ArrayList<EnemyShip> enemyShips; // stores an arraylist of enemy ships
 
     public XWing() {
-        lasers = new ArrayList<Laser>();
+        player = new Player();
         removalList = new ArrayList<Laser>();
-        playerX = playerY = 0;
+        enemyShips = new ArrayList<EnemyShip>();
 
         frame = new JFrame();
         panel = new GamePanel(this);
 
-        panel.setBackground(new Color(13, 13, 13));
+        // panel.setBackground(new Color(13, 13, 13));
 
-        KeyListen k = new KeyListen(this);
+        k = new KeyListen(this);
         frame.addKeyListener(k);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,20 +47,25 @@ public class XWing {
                     e.printStackTrace();
                 }
                 k.tick();
-                synchronized (lasers) {
+                synchronized (player.getLasers()) {
                     if (removalList.size() > 0) {
                         // System.out.println("rem");
                         // for (Laser laser : removalList) {
                         // System.out.println("removing laser: " + laser);
                         // }
                     }
-                    lasers.removeAll(removalList);
+                    player.getLasers().removeAll(removalList);
                     removalList.removeAll(removalList);
-                    for (Laser laser : lasers) {
+                    for (Laser laser : player.getLasers()) {
                         if (laser.getX() > SCREEN_WIDTH + Laser.WIDTH || laser.getX() < 0 - Laser.WIDTH) {
                             removalList.add(laser);
                         }
                         laser.tick();
+                    }
+                }
+                synchronized (enemyShips) {
+                    for (EnemyShip ship : enemyShips) {
+                        ship.step();
                     }
                 }
                 panel.repaint();
@@ -68,24 +73,12 @@ public class XWing {
         }).start();
     }
 
-    public ArrayList<Laser> getLasers() {
-        return lasers;
+    public Player getPlayer() {
+        return player;
     }
 
-    public int getPlayerX() {
-        return playerX;
-    }
-
-    public void setPlayerX(int playerX) {
-        this.playerX = playerX;
-    }
-
-    public int getPlayerY() {
-        return playerY;
-    }
-
-    public void setPlayerY(int playerY) {
-        this.playerY = playerY;
+    public ArrayList<EnemyShip> getEnemyShips() {
+        return enemyShips;
     }
 
     public static void main(String[] args) {
