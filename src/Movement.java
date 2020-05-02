@@ -15,7 +15,7 @@ public class Movement {
     final static int SCREEN_HEIGHT = 800;
 
     final static int DIAMETER = 25;
-    final int delta = 1;
+    final int delta = 2;
     final int timing = 5;
 
     JFrame frame;
@@ -56,11 +56,13 @@ public class Movement {
                 k.tick();
                 synchronized (lasers) {
                     if (removalList.size() > 0) {
+                        System.out.println("rem");
                         for (Laser laser : removalList) {
-                            System.out.println("removing laser: " + laser);
+                            // System.out.println("removing laser: " + laser);
                         }
                     }
                     lasers.removeAll(removalList);
+                    removalList.removeAll(removalList);
                     for (Laser laser : lasers) {
                         if (laser.getX() > SCREEN_WIDTH + Laser.WIDTH) {
                             removalList.add(laser);
@@ -110,7 +112,7 @@ public class Movement {
 
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 synchronized (lasers) {
-                    lasers.add(new Laser(playerX, playerY));
+                    lasers.add(new Laser(playerX, playerY + (DIAMETER / 2 - Laser.HEIGHT / 2)));
                 }
             }
 
@@ -179,6 +181,7 @@ public class Movement {
     class DrawPanel extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+            g.setColor(Color.RED);
             g.fillOval(playerX, playerY, DIAMETER, DIAMETER);
             g.setColor(Color.GREEN);
             synchronized (lasers) {
