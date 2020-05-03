@@ -1,15 +1,16 @@
 import java.util.ArrayList;
 
 public class Player extends Ship {
-    final static int WIDTH = 20;
-    final static int HEIGHT = 20;
-    final static int DELTA = 3;
+    final static int WIDTH = XWing.xWingWidth;
+    final static int HEIGHT = XWing.xWingHeight;
 
     private int power;
+    private int delta;
 
     public Player() {
         super(1, XWing.SCREEN_HEIGHT / 2, WIDTH, HEIGHT, 100);
         power = 10;
+        delta = 3;
     }
 
     public void setPosX(int posX) {
@@ -41,5 +42,9 @@ public class Player extends Ship {
             power = 100;
         }
         this.power = power;
+    }
+
+    public int getDelta() {
+        return delta;
     }
 }

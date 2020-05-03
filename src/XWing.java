@@ -1,9 +1,62 @@
-import java.util.ArrayList;
 import java.awt.*;
-import javax.swing.*;
+import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class XWing {
+
+    // final static int
+    public static BufferedImage xWingSprite;
+    public final static int xWingWidth;
+    public final static int xWingHeight;
+    public static BufferedImage redLaserSprite;
+    public static BufferedImage greenLaserSprite;
+    public final static int laserWidth;
+    public final static int laserHeight;
+    public static BufferedImage missileSprite;
+    public final static int missileWidth;
+    public final static int missileHeight;
+    public static BufferedImage TIESprite;
+    public final static int TIEwidth;
+    public final static int TIEheight;
+
+    static {
+
+        try {
+            xWingSprite = ImageIO.read(new File("img/Xwing.png"));
+            redLaserSprite = ImageIO.read(new File("img/Laser.png"));
+            greenLaserSprite = ImageIO.read(new File("img/greenLaser.png"));
+            missileSprite = ImageIO.read(new File("img/Missile.png"));
+            TIESprite = ImageIO.read(new File("img/TIE.png"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            int xWingW = xWingSprite.getWidth();
+            int xWingH = xWingSprite.getHeight();
+            int redLaserW = redLaserSprite.getWidth();
+            int redLaserH = redLaserSprite.getHeight();
+            int missileW = missileSprite.getWidth();
+            int missileH = missileSprite.getHeight();
+            int tieW = TIESprite.getWidth();
+            int tieH = TIESprite.getHeight();
+
+            xWingWidth = xWingW;
+            xWingHeight = xWingH;
+            laserWidth = redLaserW;
+            laserHeight = redLaserH;
+            missileWidth = missileW;
+            missileHeight = missileH;
+            TIEwidth = tieW;
+            TIEheight = tieH;
+        }
+    }
+
     final static int SCREEN_WIDTH = 1600;
     final static int SCREEN_HEIGHT = 800;
 

@@ -25,16 +25,16 @@ public class KeyListen implements KeyListener {
 
     public void tick() {
         if (upPressed || wPressed) {
-            game.getPlayer().setPosY(game.getPlayer().getPosY() - game.getPlayer().DELTA); // XXX
+            game.getPlayer().setPosY(game.getPlayer().getPosY() - game.getPlayer().getDelta()); // XXX
         }
         if (downPressed || sPressed) {
-            game.getPlayer().setPosY(game.getPlayer().getPosY() + game.getPlayer().DELTA);
+            game.getPlayer().setPosY(game.getPlayer().getPosY() + game.getPlayer().getDelta());
         }
         if (leftPressed || aPressed) {
-            game.getPlayer().setPosX(game.getPlayer().getPosX() - game.getPlayer().DELTA);
+            game.getPlayer().setPosX(game.getPlayer().getPosX() - game.getPlayer().getDelta());
         }
         if (rightPressed || dPressed) {
-            game.getPlayer().setPosX(game.getPlayer().getPosX() + game.getPlayer().DELTA);
+            game.getPlayer().setPosX(game.getPlayer().getPosX() + game.getPlayer().getDelta());
         }
     }
 
@@ -43,12 +43,12 @@ public class KeyListen implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             synchronized (game.getPlayer().getLasers()) {
-                game.getPlayer().getLasers().add(new Laser(game.getPlayer().getPosX()+20,
-                        game.getPlayer().getPosY()));
+                game.getPlayer().getLasers()
+                        .add(new Laser(game.getPlayer().getPosX() + 20, game.getPlayer().getPosY()));
             }
             synchronized (game.getEnemyShips()) {
-                game.getEnemyShips().add(
-                        new EnemyShip(XWing.SCREEN_WIDTH, XWing.SCREEN_HEIGHT / 2, 30, 30, 50, 1, new Path2D.Double()));
+                game.getEnemyShips().add(new EnemyShip(XWing.SCREEN_WIDTH - 100, XWing.SCREEN_HEIGHT / 2, 30, 30, 50, 1,
+                        new Path2D.Double()));
             }
         }
 
