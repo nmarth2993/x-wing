@@ -1,20 +1,18 @@
 import java.util.ArrayList;
 
 public class Player extends Ship {
-    final static int WIDTH = 20;
-    final static int HEIGHT = 20;
     final static int DELTA = 3;
 
     private int power;
 
     public Player() {
-        super(1, XWing.SCREEN_HEIGHT / 2, WIDTH, HEIGHT, 100);
+        super(1, XWing.SCREEN_HEIGHT / 2, XWing.xWingWidth, XWing.xWingWidth, 100);
         power = 10;
     }
 
     public void setPosX(int posX) {
-        if (posX + Player.WIDTH + 1 > XWing.SCREEN_WIDTH) {
-            posX = XWing.SCREEN_WIDTH - Player.HEIGHT - 1;
+        if (posX + XWing.xWingWidth + 1 > XWing.SCREEN_WIDTH) {
+            posX = XWing.SCREEN_WIDTH - XWing.xWingWidth - 1;
         }
         if (posX <= 1) {
             posX = 1;
@@ -23,8 +21,8 @@ public class Player extends Ship {
     }
 
     public void setPosY(int posY) {
-        if (posY + Player.HEIGHT + 1 > XWing.SCREEN_HEIGHT) {
-            posY = XWing.SCREEN_HEIGHT - Player.HEIGHT - 1;
+        if (posY + XWing.xWingWidth + 1 > XWing.SCREEN_HEIGHT) {
+            posY = XWing.SCREEN_HEIGHT - XWing.xWingWidth - 1;
         }
         if (posY <= XWing.BORDER) {
             posY = XWing.BORDER + 1;

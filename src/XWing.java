@@ -1,11 +1,16 @@
 import java.util.ArrayList;
 import java.awt.*;
+import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.JFrame;
 
 public class XWing {
     final static int SCREEN_WIDTH = 1600;
-    final static int SCREEN_HEIGHT = 800;
+    final static int SCREEN_HEIGHT = 600;
 
     final static int DIAMETER = 25;
     // final static int DELTA = 2; // change in pixels per tick (speed)
@@ -20,7 +25,25 @@ public class XWing {
     ArrayList<Laser> removalList;
     ArrayList<EnemyShip> enemyShips; // stores an arraylist of enemy ships
 
+    static BufferedImage xWingSprite;
+    static int xWingWidth;
+    static int xWingHeight;
+
+    static BufferedImage redLaserSprite;
+    static BufferedImage greenLaserSprite;
+    static int laserWidth;
+    static int laserHeight;
+
+    static BufferedImage missileSprite;
+    static int missileWidth;
+    static int missileHeight;
+
+    static BufferedImage TIESprite;
+    static int TIEwidth;
+    static int TIEheight;
+
     public XWing() {
+        initSprites();
         player = new Player();
         removalList = new ArrayList<Laser>();
         enemyShips = new ArrayList<EnemyShip>();
@@ -71,6 +94,27 @@ public class XWing {
                 panel.repaint();
             }
         }).start();
+    }
+
+    public void initSprites() {
+        try {
+            xWingSprite = ImageIO.read(new File("img/Xwing.png"));
+            redLaserSprite = ImageIO.read(new File("img/Laser.png"));
+            greenLaserSprite = ImageIO.read(new File("img/greenLaser.png"));
+            missileSprite = ImageIO.read(new File("img/Missile.png"));
+            TIESprite = ImageIO.read(new File("img/TIE.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        xWingWidth = xWingSprite.getWidth();
+        xWingHeight = xWingSprite.getHeight();
+        laserWidth = redLaserSprite.getWidth();
+        laserHeight = redLaserSprite.getHeight();
+        missileWidth = missileSprite.getWidth();
+        missileHeight = missileSprite.getHeight();
+        TIEwidth = TIESprite.getWidth();
+        TIEheight = TIESprite.getHeight();
+
     }
 
     public Player getPlayer() {
