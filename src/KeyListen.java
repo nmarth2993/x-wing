@@ -43,8 +43,8 @@ public class KeyListen implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             synchronized (game.getPlayer().getLasers()) {
-                game.getPlayer().getLasers().add(new Laser(game.getPlayer().getPosX()+20,
-                        game.getPlayer().getPosY()));
+                game.getPlayer().getLasers().add(new Laser(game.getPlayer().getPosX() + XWing.xWingWidth,
+                        game.getPlayer().getPosY() + XWing.xWingHeight / 2));
             }
             synchronized (game.getEnemyShips()) {
                 game.getEnemyShips().add(

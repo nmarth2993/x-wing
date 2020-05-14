@@ -8,7 +8,7 @@ public abstract class Ship {
     protected int height;
     protected int health;
 
-    private Rectangle hitbox;
+    protected Rectangle hitbox;
 
     protected ArrayList<Laser> lasers;
 

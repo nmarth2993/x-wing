@@ -14,13 +14,22 @@ public class GamePanel extends JPanel {
 
     public GamePanel(XWing game) {
         this.game = game;
-
     }
 
-    public Graphics2D drawPlayerFighter(Graphics2D g2d) {
-        g2d.drawImage(XWing.xWingSprite, game.getPlayer().getPosX() - XWing.xWingWidth / 2,
-                game.getPlayer().getPosY() - XWing.xWingHeight / 2, null);
-        return g2d;
+    public void drawPlayerFighter(Graphics2D g2d) {
+        g2d.drawImage(XWing.xWingSprite, game.getPlayer().getPosX(), game.getPlayer().getPosY(), null);
+    }
+
+    public void drawPlayerHitbox(Graphics2D g2d) {
+        g2d.setColor(Color.GREEN);
+        g2d.draw(game.getPlayer().getHitbox());
+    }
+
+    public void drawLaserHitbox(Graphics2D g2d) {
+        g2d.setColor(Color.GREEN);
+        for (Laser laser : game.getPlayer().getLasers()) {
+            g2d.draw(laser.getHitbox());
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -34,9 +43,10 @@ public class GamePanel extends JPanel {
         g2d.fillRect(3 + fm.stringWidth("Health: X") + 5, fm.getHeight() / 2, HEALTHBAR_LENGTH, fm.getHeight() / 2);
         g2d.setColor(Color.RED);
 
-        g2d = drawPlayerFighter(g2d);
+        drawPlayerFighter(g2d);
 
-        g2d.fillOval(game.getPlayer().getPosX(), game.getPlayer().getPosY(), XWing.xWingWidth, XWing.xWingHeight);
+        // g2d.fillOval(game.getPlayer().getPosX(), game.getPlayer().getPosY(),
+        // XWing.xWingWidth, XWing.xWingHeight);
         g2d.setColor(Color.GREEN);
         synchronized (game.getPlayer().getLasers()) {
             for (Laser laser : game.getPlayer().getLasers()) {
@@ -51,5 +61,8 @@ public class GamePanel extends JPanel {
                 g2d.fill(ship.getHitbox());
             }
         }
+
+        drawPlayerHitbox(g2d);
+        drawLaserHitbox(g2d);
     }
 }

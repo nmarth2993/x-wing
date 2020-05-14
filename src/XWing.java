@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 public class XWing {
     final static int SCREEN_WIDTH = 1600;
-    final static int SCREEN_HEIGHT = 600;
+    final static int SCREEN_HEIGHT = 800;
 
     final static int DIAMETER = 25;
     // final static int DELTA = 2; // change in pixels per tick (speed)
@@ -41,6 +41,18 @@ public class XWing {
     static BufferedImage TIESprite;
     static int TIEwidth;
     static int TIEheight;
+
+    static BufferedImage strikerSprite;
+    static int strikerWidth;
+    static int strikerHeight;
+
+    static BufferedImage interceptorSprite;
+    static int interceptorWidth;
+    static int interceptorHeight;
+
+    static BufferedImage destroyerSprite;
+    static int destroyerWidth;
+    static int destroyerHeight;
 
     public XWing() {
         initSprites();
@@ -103,18 +115,26 @@ public class XWing {
             greenLaserSprite = ImageIO.read(new File("img/greenLaser.png"));
             missileSprite = ImageIO.read(new File("img/Missile.png"));
             TIESprite = ImageIO.read(new File("img/TIE.png"));
+            interceptorSprite = ImageIO.read(new File("img/TIE Interceptor.png"));
+            strikerSprite = ImageIO.read(new File("img/TIE Striker.png"));
+            destroyerSprite = ImageIO.read(new File("img/Destroyer.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        TIEwidth = TIESprite.getWidth();
+        TIEheight = TIESprite.getHeight();
         xWingWidth = xWingSprite.getWidth();
         xWingHeight = xWingSprite.getHeight();
         laserWidth = redLaserSprite.getWidth();
         laserHeight = redLaserSprite.getHeight();
         missileWidth = missileSprite.getWidth();
         missileHeight = missileSprite.getHeight();
-        TIEwidth = TIESprite.getWidth();
-        TIEheight = TIESprite.getHeight();
-
+        strikerWidth = strikerSprite.getWidth();
+        strikerHeight = strikerSprite.getHeight();
+        destroyerWidth = destroyerSprite.getWidth();
+        destroyerHeight = destroyerSprite.getHeight();
+        interceptorWidth = interceptorSprite.getWidth();
+        interceptorHeight = interceptorSprite.getHeight();
     }
 
     public Player getPlayer() {

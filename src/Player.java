@@ -1,3 +1,4 @@
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class Player extends Ship {
@@ -6,7 +7,7 @@ public class Player extends Ship {
     private int power;
 
     public Player() {
-        super(1, XWing.SCREEN_HEIGHT / 2, XWing.xWingWidth, XWing.xWingWidth, 100);
+        super(1, XWing.SCREEN_HEIGHT / 2, XWing.xWingWidth, XWing.xWingHeight, 100);
         power = 10;
     }
 
@@ -18,6 +19,7 @@ public class Player extends Ship {
             posX = 1;
         }
         this.posX = posX;
+        hitbox = new Rectangle(getPosX(), getPosY(), width, height);
     }
 
     public void setPosY(int posY) {
@@ -28,6 +30,7 @@ public class Player extends Ship {
             posY = XWing.BORDER + 1;
         }
         this.posY = posY;
+        hitbox = new Rectangle(getPosX(), getPosY(), width, height);
     }
 
     public int getPower() {

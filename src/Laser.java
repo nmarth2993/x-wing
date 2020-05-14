@@ -1,3 +1,5 @@
+import java.awt.Rectangle;
+
 public class Laser {
 
     final static int velX = 10;
@@ -6,12 +8,15 @@ public class Laser {
     final static int WIDTH = 20;
     final static int HEIGHT = 10;
 
+    private Rectangle hitbox;
+
     boolean player;
-    int posX;
-    int posY;
+    private int posX;
+    private int posY;
 
     public Laser(int pX, int pY) {
         this(pX, pY, true);
+        hitbox = new Rectangle(pX, pY, XWing.laserWidth, XWing.laserHeight);
     }
 
     public Laser(int pX, int pY, boolean player) {
@@ -22,6 +27,8 @@ public class Laser {
 
     public void tick() {
         posX += velX;
+        hitbox = new Rectangle(posX - XWing.laserWidth / 2, posY - XWing.laserHeight / 2, XWing.laserWidth,
+                XWing.laserHeight);
     }
 
     public int getX() {
@@ -30,6 +37,10 @@ public class Laser {
 
     public int getY() {
         return posY;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
     }
 
     public String toString() {
