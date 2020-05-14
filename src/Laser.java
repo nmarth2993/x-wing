@@ -2,7 +2,7 @@ import java.awt.Rectangle;
 
 public class Laser {
 
-    final static int velX = 10;
+    final static int velX = 15;
     final static int velY = 10;
 
     final static int WIDTH = 20;

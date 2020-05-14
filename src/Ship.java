@@ -1,18 +1,21 @@
 import java.awt.*;
+import java.awt.geom.*;
 import java.util.ArrayList;
 
 public abstract class Ship {
-    protected int posX;
-    protected int posY;
+    protected double posX;
+    protected double posY;
     protected int width;
     protected int height;
     protected int health;
+    protected boolean dead;
 
-    protected Rectangle hitbox;
+    protected Rectangle2D hitbox;
 
     protected ArrayList<Laser> lasers;
 
     public Ship(int x, int y, int width, int height, int health) {
+        dead = false;
         posX = x;
         posY = y;
         this.width = width;
@@ -22,17 +25,17 @@ public abstract class Ship {
         lasers = new ArrayList<Laser>();
     }
 
-    public int getPosX() {
+    public double getPosX() {
         return posX;
     }
 
-    public abstract void setPosX(int posX);
+    public abstract void setPosX(double posX);
 
-    public int getPosY() {
+    public double getPosY() {
         return posY;
     }
 
-    public abstract void setPosY(int posY);
+    public abstract void setPosY(double posY);
 
     public int getHealth() {
         return health;
@@ -40,6 +43,10 @@ public abstract class Ship {
 
     // XXX: specialize this?
     public void setHealth(int health) {
+        if (health <= 0) {
+            health = 0;
+            dead = true;
+        }
         this.health = health;
     }
 
@@ -47,8 +54,12 @@ public abstract class Ship {
         return lasers;
     }
 
-    public Rectangle getHitbox() {
+    public Rectangle2D getHitbox() {
         return hitbox;
+    }
+
+    public boolean isDead() {
+        return dead;
     }
 
 }

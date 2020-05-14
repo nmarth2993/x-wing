@@ -1,8 +1,12 @@
 import java.util.Random;
-import java.awt.Rectangle;
+import java.awt.*;
+import java.awt.image.*;
 import java.awt.geom.*;
 
 public class EnemyShip extends Ship {
+
+    final static int INTERCEPT_DENOM_X = 5;
+    final static int INTERCEPT_DENOM_Y = 1;
 
     final static int DESTROYER = 1;
     final static int INTERCEPTOR = 2;
@@ -17,6 +21,8 @@ public class EnemyShip extends Ship {
     private PathIterator pathIterator; // interface
     private Path2D path; // interface
 
+    private BufferedImage sprite;
+
     private int type;
     private int healthDrop; // drops could be health/shields/powerup
     private int powerupDrop;
@@ -27,21 +33,15 @@ public class EnemyShip extends Ship {
     public EnemyShip(int x, int y, int width, int height, int health, int type, Path2D p) {
         super(x, y, width, height, health);
         this.type = type;
+        setSprite();
         setBounds();
 
         // healthDrop = r.nextInt(CHANCE);
         // powerupDrop = r.nextInt(CHANCE);
         path = p;
-        pathIterator = path.getPathIterator(new AffineTransform());
-
-        // create test path:
         path.moveTo(x, y);
-        for (int i = 0; i < 20000; i++) {
-            path.lineTo(r.nextInt(XWing.SCREEN_WIDTH / 2), r.nextInt(XWing.SCREEN_HEIGHT / 2));
-        }
-        path.lineTo(XWing.SCREEN_WIDTH / 2, XWing.SCREEN_HEIGHT / 2);
-        path.closePath();
-        pathIterator = path.getPathIterator(new AffineTransform());
+        setPath(x, y);
+        pathIterator = path.getPathIterator(null);
     }
 
     public void setBounds() {
@@ -62,38 +62,92 @@ public class EnemyShip extends Ship {
                 width = XWing.TIEwidth;
                 height = XWing.TIEheight;
                 break;
-            default:
-                width = XWing.TIEwidth;
-                height = XWing.TIEheight;
+        }
+    }
+
+    public void setSprite() {
+        switch (type) {
+            case (DESTROYER):
+                sprite = XWing.destroyerSprite;
+                break;
+            case (INTERCEPTOR):
+                sprite = XWing.interceptorSprite;
+                break;
+            case (STRIKER):
+                sprite = XWing.strikerSprite;
+                break;
+            case (TIE):
+                sprite = XWing.TIESprite;
+                break;
+        }
+    }
+
+    public void setPath(int x, int y) {
+        switch (type) {
+            case (DESTROYER):
+                // no path...
+                break;
+            case (INTERCEPTOR):
+                double pathX = x;
+                double pathY = y;
+                while (pathX > -XWing.interceptorWidth) {
+                    for (double j = 1; j < 21; j++) {
+                        pathX -= (j / INTERCEPT_DENOM_X);
+                        pathY += (j / INTERCEPT_DENOM_Y);
+                        path.lineTo(pathX, pathY);
+                        path.lineTo(pathX, pathY);
+                    }
+                    path.lineTo(pathX, pathY);
+                    for (double j = 1; j < 21; j++) {
+                        pathX -= (j / INTERCEPT_DENOM_X);
+                        pathY -= (j / INTERCEPT_DENOM_Y);
+                        path.lineTo(pathX, pathY);
+                        path.lineTo(pathX, pathY);
+                    }
+                }
+                break;
+            case (STRIKER):
+                width = XWing.strikerWidth;
+                height = XWing.strikerHeight;
+                break;
+            case (TIE):
+                for (int i = 0; i < XWing.SCREEN_WIDTH + 100; i++) {
+                    path.lineTo(x - i, y);
+                }
+                break;
         }
     }
 
     @Override
-    public void setPosX(int posX) {
-        if (posX + XWing.xWingWidth + 1 > XWing.SCREEN_WIDTH) {
-            posX = XWing.SCREEN_WIDTH - XWing.xWingWidth - 1;
-        }
-        if (posX <= 1) {
-            posX = 1;
-        }
+    public void setPosX(double posX) {
+        // if (posX + XWing.xWingWidth + 1 > XWing.SCREEN_WIDTH) {
+        // posX = XWing.SCREEN_WIDTH - XWing.xWingWidth - 1;
+        // }
+        // if (posX <= 1) {
+        // posX = 1;
+        // }
         this.posX = posX;
-        hitbox = new Rectangle(getPosX(), getPosY(), width, height);
+        hitbox = new Rectangle2D.Double(getPosX(), getPosY(), width, height);
     }
 
     @Override
-    public void setPosY(int posY) {
-        if (posY + XWing.xWingWidth + 1 > XWing.SCREEN_HEIGHT) {
-            posY = XWing.SCREEN_HEIGHT - XWing.xWingWidth - 1;
-        }
-        if (posY <= XWing.BORDER) {
-            posY = XWing.BORDER + 1;
-        }
+    public void setPosY(double posY) {
+        // if (posY + XWing.xWingWidth + 1 > XWing.SCREEN_HEIGHT) {
+        // posY = XWing.SCREEN_HEIGHT - XWing.xWingWidth - 1;
+        // }
+        // if (posY <= XWing.BORDER) {
+        // posY = XWing.BORDER + 1;
+        // }
         this.posY = posY;
-        hitbox = new Rectangle(getPosX(), getPosY(), width, height);
+        hitbox = new Rectangle2D.Double(getPosX(), getPosY(), width, height);
     }
 
     public int getType() {
         return type;
+    }
+
+    public BufferedImage getSprite() {
+        return sprite;
     }
 
     public boolean isHealthDrop() {
@@ -116,11 +170,20 @@ public class EnemyShip extends Ship {
             return;
         }
         pathIterator.next();
+        double[] coords = new double[6];
+        pathIterator.currentSegment(coords);
+        path.moveTo(coords[0], coords[1]);
         // System.out.print("setting point to: ");
         // System.out.println("(" + path.getCurrentPoint().getX() + ", " +
         // path.getCurrentPoint().getY() + ")");
-        setPosX((int) path.getCurrentPoint().getX());
-        setPosY((int) path.getCurrentPoint().getY());
+        setPosX((int) coords[0]);
+        setPosY((int) coords[1]);
+    }
+
+    public String toString() {
+        return (type == DESTROYER ? "Destroyer"
+                : type == INTERCEPTOR ? "Interceptor" : type == STRIKER ? "Striker" : "Tie Fighter") + " at " + "("
+                + getPosX() + ", " + getPosY() + ")";
     }
 
 }

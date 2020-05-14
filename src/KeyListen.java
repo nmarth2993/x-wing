@@ -41,16 +41,24 @@ public class KeyListen implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            synchronized (game.getPlayer().getLasers()) {
-                game.getPlayer().getLasers().add(new Laser(game.getPlayer().getPosX() + XWing.xWingWidth,
-                        game.getPlayer().getPosY() + XWing.xWingHeight / 2));
-            }
-            synchronized (game.getEnemyShips()) {
-                game.getEnemyShips().add(
-                        new EnemyShip(XWing.SCREEN_WIDTH, XWing.SCREEN_HEIGHT / 2, 30, 30, 50, 1, new Path2D.Double()));
-            }
-        }
+        // if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        // synchronized (game.getPlayer().getLasers()) {
+        // game.getPlayer().getLasers().add(new Laser(game.getPlayer().getPosX() +
+        // XWing.xWingWidth,
+        // game.getPlayer().getPosY() + XWing.xWingHeight / 2));
+        // }
+        // synchronized (game.getEnemyShips()) {
+        // game.getEnemyShips().add(new EnemyShip(XWing.SCREEN_WIDTH - XWing.TIEwidth -
+        // 1, XWing.SCREEN_HEIGHT / 2,
+        // XWing.TIEwidth, XWing.TIEheight, Player.LASER_DAMAGE, EnemyShip.TIE, new
+        // Path2D.Double()));
+        // game.getEnemyShips()
+        // .add(new EnemyShip(XWing.SCREEN_WIDTH - XWing.interceptorWidth - 1,
+        // XWing.SCREEN_HEIGHT / 2,
+        // XWing.interceptorWidth, XWing.interceptorHeight, Player.LASER_DAMAGE,
+        // EnemyShip.INTERCEPTOR, new Path2D.Double()));
+        // }
+        // }
 
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             upPressed = true;

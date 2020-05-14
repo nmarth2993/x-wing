@@ -14,8 +14,12 @@ public class XWing {
 
     final static int DIAMETER = 25;
     // final static int DELTA = 2; // change in pixels per tick (speed)
-    final static int TIMING = 10; // delay between repaints in ms
+    final static int TIMING = 50; // delay between repaints in ms
     final static int BORDER = 40; // space for info display
+
+    MouseListen m;
+    private int mouseX;
+    private int mouseY;
 
     JFrame frame;
     GamePanel panel;
@@ -24,6 +28,7 @@ public class XWing {
     Player player;
     ArrayList<Laser> removalList;
     ArrayList<EnemyShip> enemyShips; // stores an arraylist of enemy ships
+    ArrayList<Ship> shipRemovalList;
 
     static BufferedImage xWingSprite;
     static int xWingWidth;
@@ -58,6 +63,7 @@ public class XWing {
         initSprites();
         player = new Player();
         removalList = new ArrayList<Laser>();
+        shipRemovalList = new ArrayList<Ship>();
         enemyShips = new ArrayList<EnemyShip>();
 
         frame = new JFrame();
@@ -65,8 +71,10 @@ public class XWing {
 
         // panel.setBackground(new Color(13, 13, 13));
 
-        k = new KeyListen(this);
-        frame.addKeyListener(k);
+        // k = new KeyListen(this);
+        // frame.addKeyListener(k);
+        m = new MouseListen(this);
+        frame.addMouseMotionListener(m);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(panel);
@@ -75,20 +83,64 @@ public class XWing {
         frame.pack();
 
         new Thread(() -> {
-            for (;;) {
+            while (!player.isDead()) {
                 try {
                     Thread.sleep(TIMING);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                k.tick();
-                synchronized (player.getLasers()) {
-                    if (removalList.size() > 0) {
-                        // System.out.println("rem");
-                        // for (Laser laser : removalList) {
-                        // System.out.println("removing laser: " + laser);
-                        // }
+                // k.tick();
+                player.shootLaser();
+                player.updatePos(mouseX, mouseY);
+                synchronized (enemyShips) {
+                    for (EnemyShip enemyShip : enemyShips) {
+                        synchronized (enemyShip.getLasers()) {
+                            for (Laser enemyLaser : enemyShip.getLasers()) {
+                                if (enemyLaser.getHitbox().intersects(player.getHitbox())) {
+                                    player.setHealth(player.getHealth() - 33);
+                                    // System.out.println("COLLISION");
+                                }
+                            }
+                        }
+                        synchronized (player.getLasers()) {
+                            for (Laser laser : player.getLasers()) {
+                                if (laser.getHitbox().intersects(enemyShip.getHitbox())) {
+                                    enemyShip.setHealth(enemyShip.getHealth() - Player.LASER_DAMAGE);
+                                    removalList.add(laser);
+                                    if (enemyShip.isDead()) {
+                                        shipRemovalList.add(enemyShip);
+                                    }
+                                    // System.out.println("COLLISION");
+                                }
+                            }
+                        }
+                        synchronized (player) {
+                            if (player.getHitbox().intersects(enemyShip.getHitbox())) {
+                                player.setHealth(0);
+                                // System.out.println("player is dead? " + player.isDead());
+                            }
+                        }
                     }
+                }
+                // after collisions, check player alive
+                // if (player.isDead()) {
+                // panel.repaint();
+                // XXX: define custom panel
+                // JPanel p = new JPanel();
+                // JFrame f = new JFrame();
+                // f.setContentPane(p);
+                // f.setPreferredSize(new Dimension(500, 500));
+                // f.setVisible(true);
+                // f.pack();
+                // }
+
+                synchronized (player.getLasers()) {
+                    // if (removalList.size() > 0) {
+                    // System.out.println("rem");
+                    // for (Laser laser : removalList) {
+                    // System.out.println("removing laser: " + laser);
+                    // }
+                    // }
                     player.getLasers().removeAll(removalList);
                     removalList.removeAll(removalList);
                     for (Laser laser : player.getLasers()) {
@@ -97,10 +149,13 @@ public class XWing {
                         }
                         laser.tick();
                     }
+
                 }
                 synchronized (enemyShips) {
+                    enemyShips.removeAll(shipRemovalList);
                     for (EnemyShip ship : enemyShips) {
                         ship.step();
+                        // System.out.println(ship);
                     }
                 }
                 panel.repaint();
@@ -143,6 +198,15 @@ public class XWing {
 
     public ArrayList<EnemyShip> getEnemyShips() {
         return enemyShips;
+    }
+
+    public void setMouseCoords(int x, int y) {
+        mouseX = x;
+        mouseY = y;
+    }
+
+    public Point getMouseCoords() {
+        return new Point(mouseX, mouseY);
     }
 
     public static void main(String[] args) {

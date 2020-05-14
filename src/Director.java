@@ -1,5 +1,7 @@
 public class Director {
     public Director() {
-        // creates and spawns Horde classes by a defined timing
+        // at random interval between x and x ms
+        // create ship at random y location along edge of screen
+        // opposite player
     }
 }
