@@ -1,0 +1,2 @@
+1. extract this folder into the desired location
+2. double click the runnable jar file
